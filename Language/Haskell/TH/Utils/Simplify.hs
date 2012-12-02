@@ -16,7 +16,6 @@ instance Simplify a => Simplify (Q a) where
 instance Simplify a => Simplify [a] where
   simplify = map simplify
 
--- @#TODO Simplify guarded if and case too
 instance Simplify Exp where
   simplify (VarE o) | o == 'otherwise  = (ConE 'True)
   simplify (AppE e1 e2) = AppE (simplify e1) (simplify e2)
