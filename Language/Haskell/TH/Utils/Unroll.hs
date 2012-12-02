@@ -10,8 +10,7 @@ import Language.Haskell.TH.Utils.Simplify
 
 -- | Substitute a function application
 -- Argument must be a literal only then it will be substituted
--- Very similar to substitute with only one difference
-
+-- Very similar to substitute with only one difference in AppE line
 
 -- @TODO think of a way to combine this and substitute
 class SubstituteFun a where
