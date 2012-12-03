@@ -1,17 +1,20 @@
 {-# LANGUAGE TemplateHaskell #-}
 module Language.Haskell.TH.Utils.Defines (Defines,defines) where
 
-import Data.Set (Set,union,unions,member)
+import Data.Set (Set,union,unions)
 import qualified Data.Set as S
 import Language.Haskell.TH
 
--- | Find what variable are bounded in this context
+-- | This class captures all the variables declared in this context.
 class Defines a where
   defines :: a -> Set Name
 
+-- | Variables declared in a list of contexts is just the union of
+-- variables declared in each of them.
 instance Defines a => Defines [a] where
   defines = unions . map defines
 
+-- | Variables declared in a pattern due to patten matching.
 instance Defines Pat where
   defines (VarP n) = S.singleton n
   defines (TupP pats) = defines pats
@@ -29,7 +32,7 @@ instance Defines Pat where
   defines (ViewP _ p) = defines p
   defines _ = S.empty
 
-
+-- | Variables declared in a declaration.
 instance Defines Dec where
   defines (FunD n _) = S.singleton n
   defines (ValD p _ _) = defines p
@@ -38,6 +41,7 @@ instance Defines Dec where
   defines (ForeignD f) = defines f
   defines _ = S.empty
 
+-- | Variables declared due to importing from foreign interface.
 instance Defines Foreign where
   defines (ImportF _ _ _ n _) = S.singleton n
   defines _ = S.empty
